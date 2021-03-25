@@ -1,0 +1,45 @@
+name: CI Testing
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  dev-tests:
+    name: Run Unit Tests
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        php:
+          - "7.3"
+          - "7.4"
+          - "8.0"
+    container:
+      image: ghcr.io/makadev/ci-images/php:${{ matrix.php }}-cli
+      options: --user 1001
+    steps:
+      # checkout code
+      - name: checkout code
+        uses: actions/checkout@v2
+      # get composer cache files directory
+      - name: get composer cache files directory
+        id: composer-cache
+        run: |
+          echo "::set-output name=dir::$(/usr/local/bin/composer config cache-files-dir)"
+      # cache pull/push setup
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-php-${{ matrix.php }}--composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php }}--composer-
+      # install dependencies
+      - shell: bash
+        run: /usr/local/bin/composer install
+      # run phpunit (no coverage)
+      - shell: bash
+        run: vendor/phpunit/phpunit/phpunit -c phpunit.xml --no-coverage

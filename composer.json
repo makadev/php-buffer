@@ -1,0 +1,34 @@
+{
+    "name": "makadev/php-buffer",
+    "version": "1.0.0",
+    "description": "Buffer handling and manipulation library.",
+    "type": "library",
+    "require": {
+        "php": ">=7.3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.4",
+        "phpunit/phpcov": "^8.2",
+        "phpstan/phpstan": "^0.12.51",
+        "vimeo/psalm": "^4.0",
+        "psalm/plugin-phpunit": "^0.13.0"
+    },
+    "scripts": {
+        "tests": "phpunit-nc",
+        "coverage": "phpunit-coverage",
+        "phpstan": "phpstan-check",
+        "psalm": "psalm-check"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matthias Karbe",
+            "email": "makadev@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "makadev\\Buffer\\": "src/"
+        }
+    }
+}
